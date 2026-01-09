@@ -1,0 +1,35 @@
+project_id = "xgyzfwwxbulbegrjvtfr"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[functions.ai-chat]
+verify_jwt = false
+
+[functions.whatsapp-webhook]
+verify_jwt = false
+
+[functions.whatsapp-send]
+verify_jwt = false
+
+[functions.validate-whatsapp]
+verify_jwt = false
+
+[functions.campaign-send]
+verify_jwt = false
+
+[functions.import-contacts]
+verify_jwt = false
+
+[functions.birthday-automation]
+verify_jwt = false
+
+[functions.welcome-automation]
+verify_jwt = false
+
+[functions.ticket-notification]
+verify_jwt = false
