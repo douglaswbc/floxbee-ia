@@ -14,10 +14,11 @@ import {
   Code
 } from 'lucide-react';
 import FloxBeeLogo from '../FloxBeeLogo';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
@@ -47,48 +48,50 @@ const AppSidebar: React.FC = () => {
   };
 
   return (
-    <aside className="flex flex-col h-screen w-16 bg-card border-r border-border">
+    // shrink-0 e z-50 são essenciais para manter o sidebar fixo no mobile
+    <aside className="flex flex-col h-full w-16 bg-card border-r border-border shrink-0 z-50 relative">
       {/* Logo */}
-      <div className="flex items-center justify-center h-16 border-b border-border">
+      <div className="flex items-center justify-center h-16 border-b border-border shrink-0">
         <FloxBeeLogo size={36} showText={false} />
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 flex flex-col items-center py-4 gap-1">
-        {navItems.map((item) => {
-          const isActive = location.pathname === item.path || 
-            (item.path !== '/' && location.pathname.startsWith(item.path));
-          
-          return (
-            <Tooltip key={item.path} delayDuration={0}>
-              <TooltipTrigger asChild>
-                <NavLink
-                  to={item.path}
-                  className={cn(
-                    "flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-200",
-                    "hover:bg-secondary",
-                    isActive && "bg-primary/10 text-primary"
-                  )}
-                >
-                  <item.icon 
+      {/* Navigation com ScrollArea para evitar quebra em telas curtas */}
+      <ScrollArea className="flex-1 w-full">
+        <nav className="flex flex-col items-center py-4 gap-1">
+          {navItems.map((item) => {
+            const isActive = location.pathname === item.path || 
+              (item.path !== '/' && location.pathname.startsWith(item.path));
+            
+            return (
+              <Tooltip key={item.path} delayDuration={0}>
+                <TooltipTrigger asChild>
+                  <NavLink
+                    to={item.path}
                     className={cn(
-                      "w-5 h-5",
-                      isActive ? "text-primary" : "text-muted-foreground"
-                    )} 
-                  />
-                </NavLink>
-              </TooltipTrigger>
-              <TooltipContent side="right" className="bg-foreground text-background">
-                {item.label}
-              </TooltipContent>
-            </Tooltip>
-          );
-        })}
-      </nav>
+                      "flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-200",
+                      "hover:bg-secondary",
+                      isActive && "bg-primary/10 text-primary"
+                    )}
+                  >
+                    <item.icon 
+                      className={cn(
+                        "w-5 h-5",
+                        isActive ? "text-primary" : "text-muted-foreground"
+                      )} 
+                    />
+                  </NavLink>
+                </TooltipTrigger>
+                <TooltipContent side="right" className="bg-foreground text-background">
+                  {item.label}
+                </TooltipContent>
+              </Tooltip>
+            );
+          })}
+        </nav>
+      </ScrollArea>
 
-      {/* Bottom Actions */}
-      <div className="flex flex-col items-center pb-4 gap-1 border-t border-border pt-4">
-        {/* User Avatar */}
+      {/* Bottom Actions - Restaurado com Tooltips e Avatar */}
+      <div className="flex flex-col items-center pb-4 gap-1 border-t border-border pt-4 shrink-0">
         {profile && (
           <Tooltip delayDuration={0}>
             <TooltipTrigger asChild>
@@ -129,9 +132,9 @@ const AppSidebar: React.FC = () => {
           <TooltipTrigger asChild>
             <button
               onClick={handleLogout}
-              className="flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-200 hover:bg-destructive/10"
+              className="flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-200 hover:bg-destructive/10 group"
             >
-              <LogOut className="w-5 h-5 text-muted-foreground hover:text-destructive" />
+              <LogOut className="w-5 h-5 text-muted-foreground group-hover:text-destructive" />
             </button>
           </TooltipTrigger>
           <TooltipContent side="right" className="bg-foreground text-background">
